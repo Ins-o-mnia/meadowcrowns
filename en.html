@@ -452,7 +452,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .join-error { flex-basis: 100%; color: var(--terra-deep); font-weight: 700; font-size: 15px; }
 .join button[disabled] { opacity: .7; cursor: progress; }
 .join-soon { font-size: 15px; color: var(--ink-2); margin: 0; }
-.join[hidden], .consent[hidden], .join-soon[hidden] { display: none !important; }
+.join[hidden], .consent[hidden], .join-soon[hidden], .join-soon-lead[hidden], .lead[hidden] { display: none !important; }
 </style>
 <style>
 /* Phones (Paul, 2026-10-31: „Man sieht nicht viel vom Video“): the copy on white above, then the map film in its own
@@ -621,7 +621,13 @@ window.__forceLang = "en";
         <p class="kicker">Bald für iPhone</p>
         <h1><svg class="mc-logo" viewBox="0 0 3041 739" role="img" aria-label="Meadowcrowns"><use href="#mc-logo"/></svg></h1>
         <p class="claim">Bau dir ein kleines Königreich zum Verlieben. Und dann eins von den Nachbarn dazu.</p>
-        <p class="soon-note">Die Anmeldung zum Newsletter kommt bald.</p>
+        <form class="join" id="join-top" novalidate>
+          <input id="mail-top" name="EMAIL" type="email" autocomplete="email" required placeholder="Deine E-Mail" aria-label="E-Mail-Adresse">
+          <input class="hp" id="hp-top" name="website" type="text" value="" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="btn" type="submit">Ich will dabei sein</button>
+        </form>
+        <p class="consent" id="consent-top"></p>
+        <p class="soon-note join-soon" hidden>Die Anmeldung zum Newsletter kommt bald.</p>
         <p class="store"><b>Geplant: einmal kaufen,</b> ohne Abo, ohne Werbung, ohne Pay-to-Win.</p>
       </div>
     </div>
@@ -818,15 +824,21 @@ window.__forceLang = "en";
     <div class="wrap">
       <div class="final">
         <p class="eyebrow">Bald im App Store</p>
-        <h2>Sei von Anfang an dabei</h2>
-        <p class="lead">Meadowcrowns erscheint bald. Die Anmeldung zum Newsletter, der dir Bescheid sagt, kommt in Kürze.</p>
+        <h2>Neues vom Hof</h2>
+        <p class="lead">Trag dich ein, und wir sagen dir Bescheid, sobald Meadowcrowns erscheint. Wer mag, spielt vorher schon als Tester mit. Kein Spam, versprochen.</p>
+        <p class="lead join-soon-lead" hidden></p>
         <ul class="promise">
           <li>Geplant: einmal kaufen, ohne Abo</li>
           <li>Keine Werbung</li>
           <li>Kein Pay-to-Win</li>
           <li>Für iPhone, auch offline</li>
         </ul>
-        <p class="join-soon">Die Anmeldung zum Newsletter kommt bald.</p>
+        <form class="join" id="join-bottom" novalidate>
+          <input id="mail-bottom" name="EMAIL" type="email" autocomplete="email" required placeholder="Deine E-Mail" aria-label="E-Mail-Adresse">
+          <input class="hp" id="hp-bottom" name="website" type="text" value="" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="btn" type="submit">Dabei sein</button>
+        </form>
+        <p class="consent" id="consent-bottom"></p>
         <img class="piece" src="img/eu-muehle-allein.webp" alt="">
       </div>
     </div>
@@ -844,24 +856,44 @@ window.__forceLang = "en";
 <script>
 // Newsletter: Brevo (data in the EU) with double opt-in. Each address goes to a Brevo sign-up form; Brevo sends the
 // confirmation mail, and only a confirmed address lands on the list. Paste the form's address from Brevo's embed code
-// ("action" of <form id="sib-form">) here; English may have its own form with an English mail and falls back to the
-// German one. Nothing of Brevo loads with the page (no script, no pixel, no font): the browser talks to Brevo only when
+// ("action" of <form id="sib-form">) here; each language has its own form (English with an English mail). A language without an address shows no field. Nothing of Brevo loads with the page (no script, no pixel, no font): the browser talks to Brevo only when
 // someone presses the button. While no address is set, the forms and their consent lines stay hidden and one line says
 // the newsletter comes soon. A page on claude.ai cannot reach Brevo (its frame blocks other hosts).
-var SIGNUP = { de: "", en: "" };
-var JOIN_TEXT = {
-  de: { ok: "Fast geschafft. Bitte bestätige die Mail, die wir dir gerade geschickt haben: Erst mit dem Link darin stehst du auf der Liste.",
-        fail: "Das hat nicht geklappt. Bitte versuch es gleich noch einmal.",
-        invalid: "Bitte gib eine gültige E-Mail-Adresse ein.",
-        draft: "Danke. Im echten Auftritt kämen hier die Bestätigung und die Liste. Dies ist ein Entwurf." },
-  en: { ok: "Almost there. Please confirm the email we’ve just sent you: you’re only on the list once you tap the link inside.",
-        fail: "That didn’t work. Please try again in a moment.",
-        invalid: "Please enter a valid email address.",
-        draft: "Thank you. On the real site, your confirmation would follow here. This is only a draft." }
+var SIGNUP = { de: "https://5d178f48.sibforms.com/serve/MUIFADPTHQhXEBRAp8LMzPQfrV4aQtnzqx7Rxjn_LpFDWWW1ylh8noYjpJRC9cuggvdMrohveyof5RHj8qa94X1_fPfjTgqWG9Wu6mgsI93qIajG8tMAhDmlgdrtkhf6WaLoB05l4tcplddYiWalN-sSkP8RScIidwGUwvLZn3kF-A-DkE2gJF7O3Q-4iH7KE7zSzlxRVTuNvo-bbw==", en: "https://5d178f48.sibforms.com/serve/MUIFAHXijtaMSMbwPiMN-2EkxgrYHEF71q5KOFDczqP-DNqzVL9mpDoBFGBOhIKsulYmZo3Pv5g37tHRDIoX4ByAfiYkOK4-jp7M0-VI3pU88nRbmKmlycCu1n9VktFzGm7Le_4Dak6cikaR5Kckgmh5Mge5zkhLL9wXI40NwWtv9RNFk5iAxIuSuDsixzFUNJurCgu57QLI4O0Dtw==" };
+var LEGAL = {
+  de: { privacy: "https://jiminy.de/datenschutz.html", brevo: "https://www.brevo.com/de/legal/privacypolicy/" },
+  en: { privacy: "https://jiminy.de/datenschutz.html#en", brevo: "https://www.brevo.com/en/legal/privacypolicy/" }
 };
-var signupOpen = !!(SIGNUP.de || SIGNUP.en);
-document.querySelectorAll("form.join, .consent").forEach(function (el) { el.hidden = !signupOpen; });
-document.querySelectorAll(".join-soon").forEach(function (el) { el.hidden = signupOpen; });
+var JOIN_TEXT = {
+  de: { button: "Dabei sein", ok: "Fast geschafft! Schau in dein Postfach und bestätige deine Anmeldung.",
+        fail: "Das hat leider nicht geklappt. Bitte versuch es noch einmal.",
+        invalid: "Bitte gib eine gültige E-Mail-Adresse ein.",
+        soonLead: "Meadowcrowns erscheint bald. Die Anmeldung zum Newsletter, der dir Bescheid sagt, kommt in Kürze.",
+        top: function (l) { return "Mit Klick auf „Ich will dabei sein“ meldest du dich für Post vom Hof an: Neuigkeiten und Einladungen zum Testen von Meadowcrowns, höchstens einmal im Monat. Erst nach Bestätigung per Mail, jederzeit abbestellbar, ab 16 Jahren. Versand über Brevo. <a href=\"" + l.privacy + "\">Datenschutz</a>"; },
+        bottom: function (l) { return "Mit Klick auf „Dabei sein“ willigst du freiwillig ein, dass Studio Jiminy dir gelegentlich Post vom Hof schickt: Neuigkeiten zu Meadowcrowns und Einladungen zum Testen, höchstens einmal im Monat. Erst kommt eine Mail mit einem Bestätigungslink; erst wenn du ihn antippst, stehst du auf der Liste. Abmelden geht jederzeit über den Link in jeder Mail. Ab 16 Jahren. Versand über Brevo (Brevo GmbH, Berlin), das einige Daten auch zur eigenen Betrugserkennung nutzt. Mehr in der <a href=\"" + l.privacy + "\">Datenschutzerklärung</a> und in den <a href=\"" + l.brevo + "\" rel=\"noopener\">Datenschutzhinweisen von Brevo</a>."; } },
+  en: { button: "Count me in", ok: "Almost there! Check your inbox and confirm your sign-up.",
+        fail: "Something went wrong. Please try again.",
+        invalid: "Please enter a valid email address.",
+        soonLead: "Meadowcrowns is coming soon. Sign-up for a newsletter to let you know is on its way.",
+        top: function (l) { return "By clicking “Count me in” you sign up for mail from the court: news and invitations to test Meadowcrowns, once a month at most. Only after you confirm by email, unsubscribe any time, 16 and over. Sent via Brevo. <a href=\"" + l.privacy + "\">Privacy</a>"; },
+        bottom: function (l) { return "By clicking “Count me in” you voluntarily agree that Studio Jiminy may send you mail from the court now and then: news about Meadowcrowns and invitations to test it, once a month at most. First you get an email with a confirmation link; you are only on the list once you tap it. You can unsubscribe any time with the link in every email. 16 and over. Sent via Brevo (Brevo GmbH, Berlin), which also uses some data for its own fraud detection. More in our <a href=\"" + l.privacy + "\">privacy policy</a> and in <a href=\"" + l.brevo + "\" rel=\"noopener\">Brevo’s privacy notice</a>."; } }
+};
+var pageLoaded = Date.now();
+// Per language: a form is offered only if that language has a Brevo address. Otherwise the forms and consent lines stay
+// hidden and the page says the newsletter comes soon. Called by the language switch.
+window.signupLang = function (lang) {
+  var open = !!SIGNUP[lang], t = JOIN_TEXT[lang], l = LEGAL[lang];
+  document.querySelectorAll("form.join, .consent").forEach(function (el) { el.hidden = !open; });
+  document.querySelectorAll(".join-soon, .join-soon-lead").forEach(function (el) { el.hidden = open; });
+  document.querySelectorAll(".lead:not(.join-soon-lead)").forEach(function (el) { if (el.closest(".final")) el.hidden = !open; });
+  var btn = document.querySelector("#join-bottom button"); if (btn) btn.textContent = t.button;
+  var lead = document.querySelector(".join-soon-lead"); if (lead) lead.textContent = t.soonLead;
+  var top = document.getElementById("consent-top"), bottom = document.getElementById("consent-bottom");
+  if (top) top.innerHTML = t.top(l);
+  if (bottom) bottom.innerHTML = t.bottom(l);
+  document.querySelectorAll(".join-error").forEach(function (el) { el.remove(); });
+};
+window.signupLang(document.documentElement.lang === "en" ? "en" : "de");
 document.querySelectorAll("form.join").forEach(function (form) {
   var input = form.querySelector("input[type=email]"), button = form.querySelector("button"), trap = form.querySelector(".hp");
   function error(text) {
@@ -879,19 +911,25 @@ document.querySelectorAll("form.join").forEach(function (form) {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     var lang = document.documentElement.lang === "en" ? "en" : "de", t = JOIN_TEXT[lang];
+    var url = SIGNUP[lang];
+    if (!url) return;
     if (!input.value || !input.checkValidity()) { input.focus(); input.setAttribute("aria-invalid", "true"); error(t.invalid); return; }
     input.removeAttribute("aria-invalid");
-    var url = SIGNUP[lang] || SIGNUP.de || SIGNUP.en;
-    if (!url) { done(t.draft); return; }
-    // The trap field is invisible to people; whoever fills it is a bot and gets the same answer, but nothing is sent.
+    // Bots: the trap field is invisible to people; whoever fills it gets the same answer, but nothing is sent. A form
+    // sent within two seconds of loading the page is no person typing: dropped without a request (the answer asks to try
+    // again, so a very quick person loses nothing).
     if (trap && trap.value) { done(t.ok); return; }
-    var data = new FormData(form);
+    if (Date.now() - pageLoaded < 2000) { error(t.fail); return; }
+    // The browser talks to Brevo only now, once, with no cookies and no referrer. no-cors: Brevo's answer cannot be read
+    // (and would be Brevo's own page); the request leaving is all the browser can tell us, a lost network ends in the catch.
+    var data = new FormData();
+    data.append("EMAIL", input.value.trim());
+    data.append("email_address_check", "");
     data.append("locale", lang);
     data.append("html_type", "simple");
     button.disabled = true;
-    fetch(url + (url.indexOf("?") < 0 ? "?" : "&") + "isAjax=1", { method: "POST", body: data, credentials: "omit", referrerPolicy: "no-referrer" })
-      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.success !== false; }); })
-      .then(function (ok) { if (ok) done(t.ok); else { button.disabled = false; error(t.fail); } })
+    fetch(url + (url.indexOf("?") < 0 ? "?" : "&") + "isAjax=1", { method: "POST", mode: "no-cors", body: data, credentials: "omit", referrerPolicy: "no-referrer" })
+      .then(function () { done(t.ok); })
       .catch(function () { button.disabled = false; error(t.fail); });
   });
 });
@@ -995,7 +1033,7 @@ else {
 // Language: German in the page, English from this table. German for Germany, Austria, Switzerland and Liechtenstein
 // (by time zone or a browser language with that region), English everywhere else; the switch remembers the choice.
 var EN = {"Das Spiel": "The Game", "Krone": "Crown", "Welten": "Worlds", "Höfe": "Courts", "Krieg": "War", "Gespräche": "Envoys", "Schmücken": "Decorate", "Dabei sein": "Sign up", "Bau dir ein kleines Königreich zum Verlieben. Und dann eins von den Nachbarn dazu.": "Build a tiny kingdom you’ll fall in love with. Then help yourself to the neighbours’.", "Ich will dabei sein": "Count me in", "<b>Geplant: einmal kaufen,</b> ohne Abo, ohne Werbung, ohne Pay-to-Win.": "<b>Planned: buy once,</b> no subscription, no ads, no pay-to-win.", "Halb Gärtner, halb Feldherr": "Part gardener, part general", "Erst schön machen.<br>Dann groß machen.": "First make it lovely.<br>Then make it big.", "Jede Runde ist ein Jahr. Ein Brunnen hier, ein Blumengarten dort, und schon ziehen Leute zu. Aus ihnen werden Bauern, Händler und, wenn es sein muss, Soldaten. So wird das schönste Reich am Ende auch das stärkste.": "Every round is a year. A fountain here, a flower garden there, and people start moving in. They become farmers, traders and, if it comes to it, soldiers. Which is how the loveliest kingdom ends up the strongest.", "Mit Ton, anderthalb Minuten": "With sound, ninety seconds", "Bauen": "Build", "Felder und Weiden, Mühle, Markt und Hafen, Wege und Brücken: Wo Platz ist, zeigt dir ein goldenes Plus auf der Karte. Ein Tipp darauf, und es wird gebaut. Aus ein paar Hütten wird mit der Zeit eine Stadt.": "Fields and pastures, a mill, a market and a harbour, roads and bridges: a golden plus on the map shows where there’s room. Tap it and the building begins. Given time, a few huts become a town.", "Je wohnlicher ein Ort, desto mehr Leute ziehen zu.": "The cosier a village, the more people move in.", "Handeln": "Trade", "Auf dem Markt verkaufst du, was deine Bauern übrig haben. Die Preise ändern sich jedes Jahr. Mit einem Hafen schickst du Schiffe auf Handelsfahrt, zwei Jahre lang. Ob sie mit Gold, seltener Fracht oder nur einer guten Ausrede heimkehren, erzählt dir der Kapitän.": "At the market you sell whatever your farmers have left over, and prices change every year. With a harbour you can send ships on a trading voyage that lasts two years. Whether they come home with gold, rare cargo or just a good excuse, the captain will tell you.", "Sturm, Seeräuber, Glücksfahrt: Jede Fahrt bringt ihre eigene Geschichte mit.": "Storms, pirates, a lucky run: every voyage comes home with a story.", "Herrschen": "Rule", "Am Hof zählt die Familie. Goldene Fäden auf der Karte zeigen, wer mit wem verheiratet oder verwandt ist, eine Feuerspur, wer in Fehde liegt. Land gewinnt man im Krieg, durch eine kluge Heirat oder ein Erbe, mit dem keiner gerechnet hat.": "At court, family is everything. Golden threads on the map show who is married or related to whom, a trail of fire shows who is feuding. Land is won in war, through a clever marriage, or by an inheritance nobody saw coming.", "Heute Schwiegervater, morgen Kriegsgegner.": "Father-in-law today, enemy tomorrow.", "Erobern": "Conquer", "Fußvolk, Reiter, Bogenschützen, Wurfmaschinen. Erkläre Kriege, belagere Burgen, verschieb Grenzen. Runde für Runde, alles mit einem Daumen.": "Foot soldiers, cavalry, archers, siege engines. Declare war, besiege castles, redraw borders. Round by round, all with one thumb.", "Jedes Heer kommt aus deinen eigenen Dörfern.": "Every army is raised from your own villages.", "Das Ziel": "The goal", "Vom Ritter zum Kaiser": "From knight to emperor", "Du beginnst als kleiner Ritter mit zugiger Burg. Mit Land, Ansehen und einer klugen Heirat steigst du auf, vom Baron bis zum König. Den Kaiser wählen die Kurfürsten, die mächtigsten Fürsten im Reich. Gewinn ihre Stimmen, und die Krone gehört dir.": "You start out as a lowly knight with a draughty castle. Land, renown and a clever marriage carry you upwards, from baron to king. The emperor is chosen by the electors, the mightiest princes in the realm. Win their votes and the crown is yours.", "Die erste Kaiserwahl ist 1120, zwanzig Jahre nach dem Start": "The first imperial election is in 1120, twenty years after you start", "Heirat und Erbe öffnen Türen, die kein Heer aufbricht": "Marriage and inheritance open doors no army can break down", "Reicht ein Leben nicht, besteigt dein Kind den Thron": "If one lifetime isn’t enough, your child takes the throne", "Dein Thronsaal. Die Krone liegt schon bereit.": "Your throne room. The crown is ready and waiting.", "Vier Baustile, viele Länder": "Four styles, many lands", "Jedes Land baut auf seine Art": "Every land builds its own way", "Fachwerk im Grünen, Lehmtürme an der Küste, Sandsteinzinnen in der Wüste, geschwungene Dächer in der Ebene. In jeder Partie liegen andere Länder an anderen Orten, und jedes bringt seine Burgen, Dörfer und Gesichter mit.": "Timber frames in green hills, mud-brick towers on the coast, sandstone battlements in the desert, sweeping roofs on the plains. Every game shuffles the map: different lands in different places, each with its own castles, villages and faces.", "<b>Hügelland</b>Steinburgen, Windmühlen und Kornfelder zwischen grünen Kuppen.": "<b>Hill Country</b>Stone castles, windmills and cornfields among rolling green hills.", "<b>Savanne</b>Hohe Lehmtürme, Gärten hinter Mauern und Boote vor der Küste.": "<b>Savanna</b>Tall mud-brick towers, walled gardens and boats off the coast.", "<b>Wüste</b>Sandsteinzinnen, Zypressen und Felder, die dem Sand abgetrotzt sind.": "<b>Desert</b>Sandstone battlements, cypresses and fields won from the sand.", "<b>Ebene</b>Hofhäuser mit geschwungenen Dächern, Reisfelder und Teiche.": "<b>Plains</b>Courtyard houses with sweeping roofs, rice paddies and ponds.", "Deine Nachbarn": "Your neighbours", "Jeder Herrscher hat ein Gesicht. Und eine Meinung über dich.": "Every ruler has a face. And an opinion of you.", "Sie alle wollen dieselbe Krone wie du. Sie lachen, staunen, schmollen und spotten, je nachdem, was du gerade anstellst.": "They all want the same crown you do. They laugh, gasp, sulk and sneer, depending on what you’ve been up to.", "König Konrad": "King Konrad", "Herzogin Adelheid": "Duchess Adelheid", "König Kwame": "King Kwame", "Fürst Darius": "Prince Darius", "Fürstin Mira": "Princess Mira", "Herrin Lian": "Lady Lian", "So sehen sie im Spiel aus: Sie blinzeln, reden und zeigen offen, was sie von dir halten.": "Straight from the game: they blink, talk and make no secret of what they think of you.", "Man kann freundlich fragen. Oder mit 400 Mann.": "You could ask nicely. Or bring 400 men.", "Deine Soldaten kommen aus deinen eigenen Dörfern. Du ziehst sie Feld für Feld über die Karte, schlägst Schlachten, belagerst Burgen. Nur: Jeder Mann, der fällt, fehlt danach auf dem Acker. Gute Feldherren rechnen damit.": "Your soldiers come from your own villages. March them across the map square by square, fight battles, lay siege to castles. Just remember: every man who falls is one fewer in the fields. Good generals do the sums.", "Mann Fußvolk": "foot soldiers", "<b>Schlacht</b>Wer mehr Leute hat, gewinnt meistens. Wer besser geübt ist und von der Anhöhe kämpft, gewinnt öfter.": "<b>Battle</b>The bigger army usually wins. The better-trained one fighting from higher ground wins more often.", "<b>Belagerung</b>Wurfmaschinen beschießen Burgen aus der Ferne, bis die Mauern bröckeln. Es sei denn, die Verteidiger stürmen vorher heraus.": "<b>Siege</b>Siege engines pound castles from afar until the walls crumble. Unless the defenders charge out first.", "<b>Feldzug</b>Truppe antippen, Ziel antippen, fertig. Wer sich allerdings verschätzt, verliert Land und guten Ruf.": "<b>Campaign</b>Tap your troops, tap a target, done. Misjudge it, though, and you’ll lose land and your good name.", "<b>4</b> Waffengattungen: Fußvolk, Reiter, Bogenschützen, Wurfmaschinen": "<b>4</b> kinds of troops: foot soldiers, cavalry, archers, siege engines", "<b>Zehn Jahre</b> Frieden zum Start. Danach wird es spannend": "<b>Ten years</b> of peace to begin with. Then things get interesting", "<b>Plündern</b> füllt die Kasse, und die Truppe isst sich satt": "<b>Plunder</b> fills your coffers and your soldiers’ bellies", "Besuch vom Nachbarhof": "Visitors from next door", "Die Nachbarn schicken Gesandte, mit Anliegen und dem neuesten Klatsch. Du wählst eine Antwort, und sie merken sie sich: Mancher dankt es dir jahrelang, mancher grollt genauso lange. Und manchmal redet ein Dritter dazwischen.": "Your neighbours send envoys with requests and the latest gossip. You pick a reply, and they remember it: some will thank you for years, others will sulk for just as long. And now and then, someone else butts in.", "<small>Ritter Kuno</small>Ich komme in heikler Sache. Mein Esel Augustin ist verschwunden.": "<small>Sir Kuno</small>I come on a delicate matter. My donkey Augustin has gone missing.", "Ich lasse sofort suchen.": "I’ll send out a search party at once.", "<small>Herrin Lian mischt sich ein</small>Nicht nötig. Er steht seit drei Tagen in meinem Stall und will nicht mehr weg.": "<small>Lady Lian butts in</small>No need. He’s been in my stable for three days and refuses to leave.", "Wo es schön ist, ziehen Leute hin": "People go where it’s lovely", "Pflanz einen Hain, leg einen Blumengarten an, bau einen Brunnenplatz. Ein kleines Herz über jedem Ort zeigt, wie wohl sich die Leute dort fühlen und wie viele noch zuziehen wollen.": "Plant a grove, lay out a flower garden, build a fountain square. A little heart above each village shows how content its people are and how many more would like to move in.", "Grün, Wasser und ein Platz zum Zusammensitzen machen Orte wohnlich": "Greenery, water and somewhere to sit together make a village feel like home", "Dörfer wachsen sichtbar, Haus für Haus": "Villages grow before your eyes, house by house", "Deine Burg trägt die Farbe, die du wählst, mit Gold oder Silber": "Your castle flies the colour you choose, trimmed in gold or silver", "Euer Kanzler": "Your Chancellor", "„Das Reich ist offen, Herr. Euer Haus ist klein und Eure Burg zugig. Aber die anderen kochen auch nur mit Wasser.“": "“The realm is up for grabs, my lord. Your house is small and your castle draughty. But the others are making it up as they go, too.”", "Anno 1100, am ersten Tag": "Anno 1100, the very first day", "Sei von Anfang an dabei": "Be there from day one", "Trag dich ein, und wir sagen dir Bescheid, sobald Meadowcrowns erscheint. Wer mag, spielt vorher schon als Tester mit. Kein Spam, versprochen.": "Sign up and we’ll tell you the moment Meadowcrowns comes out. If you like, you can play it early as a tester. No spam, promise.", "Geplant: einmal kaufen, ohne Abo": "Planned: buy once, no subscription", "Keine Werbung": "No ads", "Kein Pay-to-Win": "No pay-to-win", "Eintragen": "Sign up", "Meadowcrowns · ein Spiel von Studio Jiminy": "Meadowcrowns · a game by Studio Jiminy", "<a href=\"impressum.html\">Impressum</a> · <a href=\"datenschutz.html\">Datenschutz</a> · <span>Presse</span>": "<a href=\"impressum.html#en\">Legal notice</a> · <a href=\"datenschutz.html#en\">Privacy</a> · <span>Press</span>", "Entwurf · alle Bilder aus dem Spiel": "Draft · every picture from the game itself", "Neuigkeiten zu Meadowcrowns, höchstens einmal im Monat. Mit Bestätigungsmail, jederzeit abbestellbar. <a href=\"datenschutz.html\">Datenschutz</a>": "News about Meadowcrowns, once a month at most. Confirmation email first, unsubscribe any time. <a href=\"datenschutz.html#en\">Privacy</a>", "Wir schreiben dir, wenn Meadowcrowns erscheint, und ab und zu mit einer Einladung zum Testen, höchstens einmal im Monat. Erst kommt eine E-Mail mit einem Bestätigungslink; wenn du ihn antippst, stehst du auf der Liste. Abmelden geht jederzeit über den Link in jeder Mail. Mehr in der <a href=\"datenschutz.html\">Datenschutzerklärung</a>.": "We’ll write when Meadowcrowns comes out, and now and then with an invitation to test it, once a month at most. First you’ll get an email with a confirmation link; you’re only on the list once you tap it. You can unsubscribe any time with the link in every email. More in our <a href=\"datenschutz.html#en\">privacy policy</a>.", "Die Anmeldung zum Newsletter kommt bald.": "Sign-up for the newsletter is coming soon."}, EN_ATTR = {"Trailer: ein Rundgang durch das Spiel": "Trailer: a walk through the game", "Trailer mit Ton abspielen": "Play trailer with sound", "Ton aus": "Sound off", "Ton an": "Sound on", "Seiten": "Pages", "Sprache": "Language", "Deine E-Mail": "Your email", "E-Mail-Adresse": "Email address", "Der Bau-Modus: goldene Linien um das eigene Land, ein goldenes Plus auf jedem freien Bauplatz": "Build mode: golden lines around your land, a golden plus on every free plot", "Eine Kogge läuft aus dem Hafen aus": "A cog sets sail from the harbour", "Der Hof in weißem Porzellan: ein goldener Faden der Heirat und eine Feuerspur der Fehde zum Nachbarhaus": "The court in white porcelain: a golden thread of marriage and a trail of fire from a feud, both to the neighbouring house", "Eine Steinburg mit Türmen, Zinnen und roten Fahnen": "A stone castle with towers, battlements and red flags", "Blaue Heere aus Fußvolk, Reitern und Wurfmaschinen stehen einem roten Heer gegenüber": "Blue armies of foot soldiers, cavalry and siege engines face a red army", "Der Thronsaal mit leerem Thron, die Krone liegt auf dem Kissen": "The throne room with an empty throne, the crown resting on its cushion", "Eine graue Steinburg mit Windmühle zwischen grünen Hügeln": "A grey stone castle with a windmill among green hills", "Eine hohe Lehmburg mit Gärten an der Küste": "A tall mud-brick castle with gardens on the coast", "Eine Sandsteinburg mit Zinnen in der Wüste": "A sandstone castle with battlements in the desert", "Hofhäuser mit geschwungenen Dächern und Reisfeldern in einer grünen Ebene": "Courtyard houses with sweeping roofs and rice paddies on a green plain", "Blaues Fußvolk, Reiter und Wurfmaschinen vor der eigenen Burg an der Küste": "Blue foot soldiers, cavalry and siege engines before their own castle on the coast", "Zwei blaue Heere auf ihren Sockeln mit Bannern": "Two blue armies on their bases with banners", "Zwei Heere prallen in einer Staubwolke aufeinander": "Two armies clash in a cloud of dust", "Wurfmaschinen beschießen eine Burg": "Siege engines bombard a castle", "Blaue Heere vor der eigenen Burg, ein rotes Heer rückt heran": "Blue armies before their own castle, a red army closing in", "Beispiel eines Gesprächs": "Example of a conversation", "Ein Gespräch mit einem Nachbarn im Spiel": "A conversation with a neighbour in the game", "Der Baumodus mit Herz-Schild über einem Ort": "Build mode with a heart badge above a village", "Ein Dorf mit Strohdächern und Maibaum": "A village with thatched roofs and a maypole", "Ein Brunnenplatz mit Bänken und blühenden Bäumen": "A fountain square with benches and blossoming trees"};
-Object.assign(EN, {"Meadowcrowns erscheint bald. Die Anmeldung zum Newsletter, der dir Bescheid sagt, kommt in Kürze.":"Meadowcrowns is coming soon. Sign-up for a newsletter to let you know is on its way.","Bald für iPhone":"Coming soon to iPhone","Bald im App Store":"Coming soon to the App Store","Für iPhone, auch offline":"For iPhone, plays offline","<a href=\"https://jiminy.de/impressum.html\">Impressum</a> · <a href=\"https://jiminy.de/datenschutz.html\">Datenschutz</a> · Musik: <a href=\"https://opengameart.org/users/randommind\" rel=\"noopener\">RandomMind</a> (CC0)":"<a href=\"https://jiminy.de/impressum.html#en\">Legal notice</a> · <a href=\"https://jiminy.de/datenschutz.html#en\">Privacy</a> · Music: <a href=\"https://opengameart.org/users/randommind\" rel=\"noopener\">RandomMind</a> (CC0)","Alle Bilder aus dem Spiel":"All images from the game"}); Object.assign(EN_ATTR, {"Vollbild":"Full screen"});
+Object.assign(EN, {"Neues vom Hof":"News from the Court","Trag dich ein, und wir sagen dir Bescheid, sobald Meadowcrowns erscheint. Wer mag, spielt vorher schon als Tester mit. Kein Spam, versprochen.":"We write when there’s a story to tell: new pictures, the App Store launch. Never more than needed.","Bald für iPhone":"Coming soon to iPhone","Bald im App Store":"Coming soon to the App Store","Für iPhone, auch offline":"For iPhone, plays offline","<a href=\"https://jiminy.de/impressum.html\">Impressum</a> · <a href=\"https://jiminy.de/datenschutz.html\">Datenschutz</a> · Musik: <a href=\"https://opengameart.org/users/randommind\" rel=\"noopener\">RandomMind</a> (CC0)":"<a href=\"https://jiminy.de/impressum.html#en\">Legal notice</a> · <a href=\"https://jiminy.de/datenschutz.html#en\">Privacy</a> · Music: <a href=\"https://opengameart.org/users/randommind\" rel=\"noopener\">RandomMind</a> (CC0)","Alle Bilder aus dem Spiel":"All images from the game"}); Object.assign(EN_ATTR, {"Vollbild":"Full screen"});
 (function () {
   var dach = ["DE", "AT", "CH", "LI"], zones = ["Europe/Berlin", "Europe/Busingen", "Europe/Vienna", "Europe/Zurich", "Europe/Vaduz"];
   function guess() {
@@ -1026,6 +1064,7 @@ Object.assign(EN, {"Meadowcrowns erscheint bald. Die Anmeldung zum Newsletter, d
     });
     document.querySelectorAll(".lang button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.lang === lang)); });
     if (window.trailerLang) window.trailerLang(lang);
+    if (window.signupLang) window.signupLang(lang);
   }
   document.querySelectorAll(".lang button").forEach(function (b) {
     b.addEventListener("click", function () { apply(b.dataset.lang); try { localStorage.setItem("tc-lang", b.dataset.lang); } catch (e) {} });
