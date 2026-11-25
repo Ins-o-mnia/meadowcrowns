@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /ig-medien/
 Sitemap: https://meadowcrowns.com/sitemap.xml
